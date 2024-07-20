@@ -19,7 +19,7 @@ public class Professor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",nullable = false)
-    private long id;
+    private Long id;
 
     @Column(name = "firstname",nullable = false)
     private String firstName;
