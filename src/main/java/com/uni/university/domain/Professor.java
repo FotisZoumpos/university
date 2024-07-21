@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Entity
 @Table(name = "professor")
 @ToString
@@ -39,7 +40,8 @@ public class Professor {
     @Column(name = "gender",nullable = false)
     private Gender gender;
 
-    @OneToMany(mappedBy = "professor")
+
+    @OneToMany(mappedBy = "professor",fetch = FetchType.EAGER)
     private List<Course> courses;
 
     public Professor(String firstName, String lastName, String email, String phone, LocalDate birthday, Gender gender) {
