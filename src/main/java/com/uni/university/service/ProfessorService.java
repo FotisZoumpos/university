@@ -2,13 +2,12 @@ package com.uni.university.service;
 
 import com.uni.university.domain.Professor;
 import com.uni.university.repository.ProfessorRepository;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class ProfessorService {
         return repository.findAll();
     }
 
-    public Professor findById(Integer id) {
+    public Optional<Professor> findById(Long id) {
         return repository.findById(id);
     }
 

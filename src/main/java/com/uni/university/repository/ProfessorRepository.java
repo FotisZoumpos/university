@@ -13,7 +13,6 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 
 
     public List<Professor> findAll();
-    Professor findById(Integer id);
     Professor save(Professor professor);
    // Professor create(Professor professor);
    // Professor update(Professor professor);
