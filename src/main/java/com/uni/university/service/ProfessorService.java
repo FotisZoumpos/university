@@ -1,5 +1,6 @@
 package com.uni.university.service;
 
+import com.uni.university.domain.Course;
 import com.uni.university.domain.Professor;
 import com.uni.university.repository.ProfessorRepository;
 import jakarta.transaction.Transactional;
@@ -23,28 +24,55 @@ public class ProfessorService {
   }
 
   @Transactional
+  public Optional<Professor> deleteById(long id) {
+    Professor professor = repository.findById(id).orElse(null);
+    if (professor != null) {
+      List<Course> courses = professor.getCourses();
+
+      for (Course course : courses) {
+        course.setProfessor(null);
+      }
+      repository.delete(professor);
+      System.out.println("Professor deleted: " + professor);
+      return Optional.of(professor);
+    } else {
+      System.out.println("Professor with ID:" + id + " not found.");
+      return Optional.empty();
+
+    }
+  }
+
+  @Transactional
+  public void deleteAll() {
+    List<Professor> professors = findAll();
+    for (Professor professor : professors) {
+      List<Course> courses = professor.getCourses();
+      for (Course course : courses) {
+        course.setProfessor(null);
+      }
+      repository.delete(professor);
+    }
+    System.out.println("Professors deleted successfully.");
+  }
+
+  @Transactional
   public void create(Professor professor) {
 
 
-    professor.setCourses(null);
     if (exists(professor)) {
-      throw new IllegalArgumentException("Professor already exists");
+      System.out.println("Professor " + professor.getFirstName() + " " + professor.getLastName() + " already exists.");
     } else {
       repository.save(professor);
+      System.out.println("Professor created: " + professor.getFirstName() + " " + professor.getLastName());
     }
-    System.out.println("Professor created: " + professor.getFirstName() + " " + professor.getLastName());
+
   }
 
   public boolean exists(Professor professor) {
 
-
     boolean emailExists = repository.existsByEmail(professor.getEmail());
     boolean phoneExists = repository.existsByPhone(professor.getPhone());
-   /* if (emailExists) {
-      System.out.println("Professor with email " + professor.getEmail() + " already exists");
-    } else if (phoneExists) {
-      System.out.println("Professor with phone " + professor.getPhone() + " already exists");
-    }*/
     return emailExists || phoneExists;
+
   }
 }

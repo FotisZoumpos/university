@@ -1,12 +1,6 @@
 package com.uni.university;
 
-import com.uni.university.domain.Gender;
-import com.uni.university.domain.Professor;
-import com.uni.university.repository.ProfessorRepository;
 import com.uni.university.service.ProfessorService;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -29,41 +23,23 @@ public class Application implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
+    // long id = 1;
+    // Optional<Professor> tempProfessor = professorService.findById(id);
+    // System.out.println(tempProfessor);
+    // professorService.findAll().forEach(System.out::println);
 
-    professorService.findAll().forEach(System.out::println);
-  }
+    /* LocalDate birthday = LocalDate.of(1993, 4, 4);
+      Professor professor = new Professor("Fotis", "Zoumpos", "f@z.gr", "6980972601", birthday, Gender.MALE);
+      professorService.create(professor);
 
+      LocalDate birthday1 = LocalDate.of(2000, 10, 10);
+      Professor professor1 = new Professor("Giannis", "Davilas", "g@d.gr", "6954123870", birthday1, Gender.MALE);
+      professorService.create(professor1);*/
 
-  private void updateProfessor(ProfessorRepository professorRepository) {
-    long id = 1;
-    Optional<Professor> professor = professorRepository.findById(id);
-    professor.get().setFirstName("Giorgos");
-    professor.get().setLastName("diamantakos");
-    professor.get().setEmail("g@diamantakos.com");
-    professor.get().setPhone("6932587410");
-    professorRepository.save(professor.orElse(null));
+    //long id = 10;
+    //Optional<Professor> tempProfessor = professorService.deleteById(id);
 
-  }
-
-  private void findAllProfessors(ProfessorRepository professorRepository) {
-    List<Professor> professors = professorRepository.findAll();
-    for (Professor professor : professors) {
-      System.out.println(professor);
-    }
-
-  }
-
-  private void findProfessorById(ProfessorRepository professorRepository) {
-    long id = 1;
-    Optional<Professor> professor = professorRepository.findById(id);
-    System.out.println(professor);
-  }
-
-  private void createProfessor(ProfessorRepository professorRepository) {
-    LocalDate birthday = LocalDate.of(1980, 1, 5);
-    Professor professor = new Professor("Leo", "xri", "l@x.gr", "9874561230", birthday, Gender.MALE);
-    professorRepository.save(professor);
-    System.out.println(professor);
+    professorService.deleteAll();
   }
 
 
