@@ -2,65 +2,45 @@ package com.uni.university;
 
 import com.uni.university.domain.Gender;
 import com.uni.university.domain.Professor;
-import com.uni.university.repository.ProfessorRepository;
+import com.uni.university.service.ProfessorService;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
-import java.time.LocalDate;
-import java.util.List;
-
-@SpringBootApplication
 @RequiredArgsConstructor
-public class Application {
+@SpringBootApplication
+public class Application implements CommandLineRunner {
 
 
+  private final ProfessorService service;
 
 
-
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
-
-
-	@Bean
-	public CommandLineRunner commandLineRunner(ProfessorRepository professorRepository) {
-		return runner-> {
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
 
 
+  @Override
+  public void run(String... args) throws Exception {
 
-			//createProfessor(professorRepository);
-			//findProfessorById(professorRepository);
-			//findAllProfessors(professorRepository);
+    LocalDate birthday = LocalDate.of(1993, 5, 23);
+    Professor professor = new Professor("Giannis", "Davilas", "g@d.gr", "6958471203", birthday, Gender.MALE);
+    //professorService.save(professor);
 
+   /* if (service.findAll().isEmpty()) {
+      System.out.println("No professors found");
+    } else {
+      service.findAll().forEach(System.out::println);
+    }
 
+    long id = 1;
+    Optional<Professor> tempProfessor = service.findById(id);
+    System.out.println(tempProfessor);*/
 
-		};
-	}
+    service.create(professor);
 
-	private void findAllProfessors(ProfessorRepository professorRepository) {
-		List<Professor> professors = professorRepository.findAll();
-		for(Professor professor : professors) {
-			System.out.println(professor);
-		}
-
-	}
-
-	private void findProfessorById(ProfessorRepository professorRepository) {
-		int id = 1;
-		Professor professor = professorRepository.findById(id);
-		System.out.println(professor);
-	}
-
-	private void createProfessor(ProfessorRepository professorRepository) {
-		LocalDate birthday = LocalDate.of(1993,12,19);
-		Professor professor = new Professor("Kyriakos","Pap","k@p.gr","6754123980",birthday,Gender.MALE);
-		professorRepository.save(professor);
-		System.out.println(professor);
-	}
-
-
+  }
 }
 

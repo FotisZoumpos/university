@@ -22,4 +22,7 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
     void findBy();
 
 
+  boolean existsByEmail(String email);
+
+  boolean existsByPhone(String phone);
 }
