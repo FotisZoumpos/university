@@ -15,13 +15,39 @@ public class ProfessorService {
   private final ProfessorRepository repository;
 
 
+  public Professor findByPhone(String phone) {
+    if (repository.findByPhone(phone) != null) {
+      System.out.println("Phone " + phone + " is found.");
+      return repository.findByPhone(phone);
+    }
+    System.out.println("Invalid phone number.");
+    return null;
+  }
+
+  public List<Professor> findByFirstName(String firstName) {
+    return repository.findByFirstName(firstName);
+  }
+
+  public List<Professor> findByLastName(String lastName) {
+    return repository.findByLastName(lastName);
+  }
+
+  @Transactional
+  public void update(Professor professor) {
+
+    repository.save(professor);
+  }
+
   public List<Professor> findAll() {
     return repository.findAll();
   }
 
-  public Optional<Professor> findById(long id) {
+  public Optional<Professor> findById(Long id) {
+
     return repository.findById(id);
+
   }
+
 
   @Transactional
   public Optional<Professor> deleteById(long id) {
@@ -55,24 +81,7 @@ public class ProfessorService {
     System.out.println("Professors deleted successfully.");
   }
 
-  @Transactional
-  public void create(Professor professor) {
 
-
-    if (exists(professor)) {
-      System.out.println("Professor " + professor.getFirstName() + " " + professor.getLastName() + " already exists.");
-    } else {
-      repository.save(professor);
-      System.out.println("Professor created: " + professor.getFirstName() + " " + professor.getLastName());
-    }
-
-  }
-
-  public boolean exists(Professor professor) {
-
-    boolean emailExists = repository.existsByEmail(professor.getEmail());
-    boolean phoneExists = repository.existsByPhone(professor.getPhone());
-    return emailExists || phoneExists;
-
-  }
 }
+
+
