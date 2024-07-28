@@ -1,106 +1,60 @@
 package com.uni.university.service;
 
-import com.uni.university.domain.Course;
 import com.uni.university.domain.Professor;
 import com.uni.university.repository.ProfessorRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ProfessorService {
+
   private final ProfessorRepository repository;
 
+  //TODO All Exceptions should be replaced with customised university exceptions
 
   public List<Professor> findAll() {
     return repository.findAll();
   }
 
-  public Optional<Professor> findById(Long id) {
-
-    return repository.findById(id);
-
+  @SneakyThrows
+  public Professor findOrThrow(Long id) {
+    return repository.findById(id).orElseThrow(Exception::new);
   }
 
-  public void save(Professor professor) {
-
-    repository.save(professor);
+  public Professor save(Professor professor) {
+    return repository.save(professor);
   }
 
+  @SneakyThrows
   public Professor create(Professor professor) {
-
-    if (!repository.existsByUsername(professor.getUsername())) {
-      save(professor);
+    if (repository.existsByUsername(professor.getUsername())) {
+      throw new Exception();
     }
-    return professor;
+
+    return save(professor);
   }
 
-  public Professor update(Professor professor) {
-    if (professor.getId() != null && repository.existsById(professor.getId())) {
-      save(professor);
-    }
-    return professor;
-  }
+  /* public Professor update(Professor professor) {
+   * The logic for the update is this:
+   * If no id is provided -> means it is not an update
+   * If id is provided fetch the professor from database and update his!!! fields
+   * return the newly saved professor
+   * NOTE: Some fields should not be able to get updated
+   * which??
+   * how we should proceed with this?
+   * } */
 
   public void deleteById(Long id) {
-
-    if (findById(id).isPresent()) {
-      Optional<Professor> professor = findById(id);
-      List<Course> courses = professor.get().getCourses();
-      for (Course course : courses) {
-        course.setProfessor(null);
-      }
-      repository.deleteById(id);
-    }
+    /*Let's leave it like this for now and deal with the courses later */
+    repository.deleteById(id);
   }
 
-  public void deleteAll() {
-    List<Professor> professors = findAll();
-    for (Professor professor : professors) {
-      List<Course> courses = professor.getCourses();
-      for (Course course : courses) {
-        course.setProfessor(null);
-      }
-    }
-    repository.deleteAll();
+  public void deleteAll(List<Long> professorIds) {
+    /*Let's leave it like this for now and deal with the courses later */
+    repository.deleteAll(repository.findAllByIdIn(professorIds));
   }
-
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
