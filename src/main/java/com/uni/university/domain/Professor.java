@@ -10,7 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,8 +58,8 @@ public class Professor {
   @Column(name = "username", nullable = false, unique = true)
   private String username;
 
-
+  @Builder.Default
   @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
-  private List<Course> courses;
+  private Set<Course> courses = new HashSet<>();
 
 }
