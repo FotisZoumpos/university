@@ -32,7 +32,6 @@ public class Professor {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
-
   private Long id;
 
   @Column(name = "firstname", nullable = false)
@@ -52,6 +51,9 @@ public class Professor {
 
   @Column(name = "gender", nullable = false)
   private Gender gender;
+
+  @Column(name = "username", nullable = false, unique = true)
+  private String username;
 
 
   @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)

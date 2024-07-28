@@ -1,5 +1,6 @@
 package com.uni.university.service;
 
+import com.uni.university.domain.Course;
 import com.uni.university.domain.Professor;
 import com.uni.university.repository.ProfessorRepository;
 import java.util.List;
@@ -25,27 +26,45 @@ public class ProfessorService {
 
 
   public void save(Professor professor) {
-    String email = professor.getEmail();
-    String phone = professor.getPhone();
 
-    if (repository.existsByEmail(email) || repository.existsByPhone(phone)) {
-      System.out.println("Professor already exists.");
-    } else {
-      repository.save(professor);
-      System.out.println("Professor successfully created.");
-    }
+    repository.save(professor);
   }
 
   public void create(Professor professor) {
-    String email = professor.getEmail();
-    String phone = professor.getPhone();
 
-    if (professor.getId() != null || repository.existsByEmail(email) || repository.existsByPhone(phone)) {
-      System.out.println("Professor already exists.");
-    } else {
-      repository.save(professor);
-      System.out.println("Professor successfully created.");
+    if (professor.getUsername() != null) {
+      save(professor);
     }
+
+  }
+
+  public void update(Professor professor) {
+    if (professor.getId() != null && repository.existsById(professor.getId())) {
+      save(professor);
+    }
+  }
+
+  public void deleteById(Long id) {
+
+    if (findById(id).isPresent()) {
+      Optional<Professor> professor = findById(id);
+      List<Course> courses = professor.get().getCourses();
+      for (Course course : courses) {
+        course.setProfessor(null);
+      }
+      repository.deleteById(id);
+    }
+  }
+
+  public void deleteAll() {
+    List<Professor> professors = findAll();
+    for (Professor professor : professors) {
+      List<Course> courses = professor.getCourses();
+      for (Course course : courses) {
+        course.setProfessor(null);
+      }
+    }
+    repository.deleteAll();
   }
 
 }
