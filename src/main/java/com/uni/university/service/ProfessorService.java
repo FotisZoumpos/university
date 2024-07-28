@@ -24,24 +24,24 @@ public class ProfessorService {
 
   }
 
-
   public void save(Professor professor) {
 
     repository.save(professor);
   }
 
-  public void create(Professor professor) {
+  public Professor create(Professor professor) {
 
-    if (professor.getUsername() != null) {
+    if (!repository.existsByUsername(professor.getUsername())) {
       save(professor);
     }
-
+    return professor;
   }
 
-  public void update(Professor professor) {
+  public Professor update(Professor professor) {
     if (professor.getId() != null && repository.existsById(professor.getId())) {
       save(professor);
     }
+    return professor;
   }
 
   public void deleteById(Long id) {
@@ -66,6 +66,7 @@ public class ProfessorService {
     }
     repository.deleteAll();
   }
+
 
 }
 
