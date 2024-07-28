@@ -23,16 +23,16 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 @Table(name = "professor")
 @ToString
-@Builder(toBuilder = true)
+@Builder
 public class Professor {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
+
   private Long id;
 
   @Column(name = "firstname", nullable = false)
@@ -57,12 +57,4 @@ public class Professor {
   @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
   private List<Course> courses;
 
-/*  public Professor(String firstName, String lastName, String email, String phone, LocalDate birthday, Gender gender) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.phone = phone;
-    this.birthday = birthday;
-    this.gender = gender;
-  }*/
 }

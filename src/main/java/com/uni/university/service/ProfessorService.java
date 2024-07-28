@@ -23,6 +23,64 @@ public class ProfessorService {
 
   }
 
+
+  public void save(Professor professor) {
+    String email = professor.getEmail();
+    String phone = professor.getPhone();
+
+    if (repository.existsByEmail(email) || repository.existsByPhone(phone)) {
+      System.out.println("Professor already exists.");
+    } else {
+      repository.save(professor);
+      System.out.println("Professor successfully created.");
+    }
+  }
+
+  public void create(Professor professor) {
+    String email = professor.getEmail();
+    String phone = professor.getPhone();
+
+    if (professor.getId() != null || repository.existsByEmail(email) || repository.existsByPhone(phone)) {
+      System.out.println("Professor already exists.");
+    } else {
+      repository.save(professor);
+      System.out.println("Professor successfully created.");
+    }
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
