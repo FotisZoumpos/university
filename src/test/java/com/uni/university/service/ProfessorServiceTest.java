@@ -35,4 +35,17 @@ class ProfessorServiceTest {
     //Assert
     verify(repository, times(1)).save(professor);
   }
+
+  /*How to test:
+  * Naming: testMethodName_whatYouTest_anyAdditionalInfo
+  * px: testCreate_throwsByUsernameAlreadyExists
+  * if you want to test the whole method testCreate makes sense
+  * for every conditional branch you have to create the corresponding test
+  * most acts produce a result, you might want to assert the result
+  * common assertions:
+  *  assertEquals -> checks equality of fields
+  *  assertNull -> checks if a field is null
+  *  verify -> verifies that a method was called with the correct argument
+  * */
+
 }
