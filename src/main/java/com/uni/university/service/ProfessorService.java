@@ -54,7 +54,7 @@ public class ProfessorService {
 
   public void deleteAll(List<Long> professorIds) {
     /*Let's leave it like this for now and deal with the courses later */
-    repository.deleteAll(repository.findAllByIdIn(professorIds));
+    repository.deleteAllByIdInBatch(professorIds);
   }
 
 }
