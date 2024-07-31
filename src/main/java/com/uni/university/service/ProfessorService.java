@@ -30,6 +30,10 @@ public class ProfessorService {
 
   @SneakyThrows
   public Professor create(Professor professor) {
+    //TODO replace with proper DTO
+    if (professor.getId() != null) {
+      throw new Exception();
+    }
     if (repository.existsByUsername(professor.getUsername())) {
       throw new Exception();
     }
