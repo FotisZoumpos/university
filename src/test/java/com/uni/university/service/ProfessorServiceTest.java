@@ -1,6 +1,7 @@
 package com.uni.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -10,8 +11,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static utils.ProfessorUtils.getRandomProfessor;
 
+import com.uni.university.domain.Gender;
 import com.uni.university.domain.Professor;
 import com.uni.university.repository.ProfessorRepository;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -132,6 +135,53 @@ class ProfessorServiceTest {
 
   }
 
+  @Test
+  void update_throws_by_null_ID() {
+    Professor professor = getRandomProfessor();
+    professor.setId(null);
+
+    assertThrows(Exception.class, () -> service.update(professor));
+    verify(repository, never()).findById(professor.getId());
+    verify(repository, never()).save(any(Professor.class));
+  }
+
+  @Test
+  void update() {
+    Professor professor = getRandomProfessor();
+    professor.setId(1L);
+    professor.setUsername("q");
+    professor.setEmail("f@z.com");
+    professor.setPhone("6987451230");
+    professor.setGender(Gender.OTHER);
+    professor.setFirstName("fotis");
+    professor.setLastName("zoumpos");
+    professor.setBirthday(LocalDate.of(1993, 4, 4));
+
+    Professor updateProfessor = new Professor();
+    updateProfessor.setId(1L);
+    professor.setUsername("q");
+    updateProfessor.setEmail("x@k.com");
+    updateProfessor.setPhone("21034256978");
+    updateProfessor.setGender(Gender.MALE);
+    updateProfessor.setFirstName("xris");
+    updateProfessor.setLastName("kelaidis");
+    updateProfessor.setBirthday(LocalDate.of(2000, 1, 1));
+
+    when(repository.findById(updateProfessor.getId())).thenReturn(Optional.of(professor));
+    when(repository.save(professor)).thenReturn(professor);
+
+    Professor updatedProfessor = service.update(updateProfessor);
+
+    assertNotNull(updatedProfessor);
+    assertEquals("x@k.com", updateProfessor.getEmail());
+    assertEquals("21034256978", updateProfessor.getPhone());
+    assertEquals(Gender.MALE, updateProfessor.getGender());
+    assertEquals(LocalDate.of(2000, 1, 1), updateProfessor.getBirthday());
+    assertEquals("xris", updateProfessor.getFirstName());
+    assertEquals("kelaidis", updateProfessor.getLastName());
+
+    verify(repository, times(1)).save(professor);
+  }
 
 
 

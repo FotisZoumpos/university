@@ -41,6 +41,37 @@ public class ProfessorService {
     return save(professor);
   }
 
+  @SneakyThrows
+  public Professor update(Professor professor) {
+    if (professor.getId() == null) {
+      throw new Exception();
+    }
+    Professor existingProfessor = findOrThrow(professor.getId());
+
+    if (professor.getFirstName() != null) {
+      existingProfessor.setFirstName(professor.getFirstName());
+    }
+    if (professor.getLastName() != null) {
+      existingProfessor.setLastName(professor.getLastName());
+    }
+    if (professor.getEmail() != null) {
+      existingProfessor.setEmail(professor.getEmail());
+    }
+    if (professor.getPhone() != null) {
+      existingProfessor.setPhone(professor.getPhone());
+    }
+    if (professor.getGender() != null) {
+      existingProfessor.setGender(professor.getGender());
+    }
+    if (professor.getBirthday() != null) {
+      existingProfessor.setBirthday(professor.getBirthday());
+    }
+
+    return save(existingProfessor);
+  }
+
+
+
   /* public Professor update(Professor professor) {
    * The logic for the update is this:
    * If no id is provided -> means it is not an update
