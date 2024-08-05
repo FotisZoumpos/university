@@ -1,8 +1,10 @@
 package com.uni.university.service;
 
 import com.uni.university.domain.Professor;
+import com.uni.university.dto.ProfessorDto;
 import com.uni.university.repository.ProfessorRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -29,42 +31,44 @@ public class ProfessorService {
   }
 
   @SneakyThrows
-  public Professor create(Professor professor) {
+  public Professor create(ProfessorDto professorDto) {
     //TODO replace with proper DTO
-    if (professor.getId() != null) {
+    if (professorDto.getId() != null) {
       throw new Exception();
     }
-    if (repository.existsByUsername(professor.getUsername())) {
+    if (repository.existsByUsername(professorDto.getUsername())) {
       throw new Exception();
     }
 
-    return save(professor);
+    Professor professor = convertToProfessor(professorDto);
+
+    return repository.save(professor);
   }
 
   @SneakyThrows
-  public Professor update(Professor professor) {
-    if (professor.getId() == null) {
+  public Professor update(ProfessorDto professorDto) {
+    if (professorDto.getId() == null) {
       throw new Exception();
     }
-    Professor existingProfessor = findOrThrow(professor.getId());
+    Professor existingProfessor = findOrThrow(professorDto.getId());
 
-    if (professor.getFirstName() != null) {
-      existingProfessor.setFirstName(professor.getFirstName());
+    if (professorDto.getFirstName() != null) {
+      existingProfessor.setFirstName(professorDto.getFirstName());
     }
-    if (professor.getLastName() != null) {
-      existingProfessor.setLastName(professor.getLastName());
+    if (professorDto.getLastName() != null) {
+      existingProfessor.setLastName(professorDto.getLastName());
     }
-    if (professor.getEmail() != null) {
-      existingProfessor.setEmail(professor.getEmail());
+    if (professorDto.getEmail() != null) {
+      existingProfessor.setEmail(professorDto.getEmail());
     }
-    if (professor.getPhone() != null) {
-      existingProfessor.setPhone(professor.getPhone());
+    if (professorDto.getPhone() != null) {
+      existingProfessor.setPhone(professorDto.getPhone());
     }
-    if (professor.getGender() != null) {
-      existingProfessor.setGender(professor.getGender());
+    if (professorDto.getGender() != null) {
+      existingProfessor.setGender(professorDto.getGender());
     }
-    if (professor.getBirthday() != null) {
-      existingProfessor.setBirthday(professor.getBirthday());
+    if (professorDto.getBirthday() != null) {
+      existingProfessor.setBirthday(professorDto.getBirthday());
     }
 
     return save(existingProfessor);
@@ -92,4 +96,37 @@ public class ProfessorService {
     repository.deleteAllByIdInBatch(professorIds);
   }
 
+  public List<ProfessorDto> getAllInfo() {
+    return repository.findAll()
+        .stream()
+        .map(this::convertToProfessorDto)
+        .collect(Collectors.toList());
+  }
+
+  public Professor convertToProfessor(ProfessorDto professorDto) {
+    Professor professor = new Professor();
+    professor.setId(professorDto.getId());
+    professor.setFirstName(professorDto.getFirstName());
+    professor.setLastName(professorDto.getLastName());
+    professor.setEmail(professorDto.getEmail());
+    professor.setPhone(professorDto.getPhone());
+    professor.setGender(professorDto.getGender());
+    professor.setUsername(professorDto.getUsername());
+    professor.setBirthday(professorDto.getBirthday());
+    return professor;
+  }
+
+  public ProfessorDto convertToProfessorDto(Professor professor) {
+    ProfessorDto professorDto = new ProfessorDto();
+    professorDto.setId(professor.getId());
+    professorDto.setFirstName(professor.getFirstName());
+    professorDto.setLastName(professor.getLastName());
+    professorDto.setUsername(professor.getUsername());
+    professorDto.setEmail(professor.getEmail());
+    professorDto.setPhone(professor.getPhone());
+    professorDto.setBirthday(professor.getBirthday());
+    professorDto.setGender(professor.getGender());
+
+    return professorDto;
+  }
 }

@@ -13,6 +13,7 @@ import static utils.ProfessorUtils.getRandomProfessor;
 
 import com.uni.university.domain.Gender;
 import com.uni.university.domain.Professor;
+import com.uni.university.dto.ProfessorDto;
 import com.uni.university.repository.ProfessorRepository;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -81,9 +82,10 @@ class ProfessorServiceTest {
   @Test
   void testCreate_throws_by_not_null_ID() {
     Professor professor = getRandomProfessor();
+    professor.setId(1L);
+    ProfessorDto professorDto = service.convertToProfessorDto(professor);
 
-
-    assertThrows(Exception.class, () -> service.create(professor));
+    assertThrows(Exception.class, () -> service.create(professorDto));
 
     verify(repository, never()).existsByUsername(anyString());
     verify(repository, never()).save(any(Professor.class));
@@ -93,12 +95,13 @@ class ProfessorServiceTest {
   void testCreate_throws_by_username_exists() {
     Professor professor = getRandomProfessor();
     professor.setId(null);
+    ProfessorDto professorDto = service.convertToProfessorDto(professor);
 
-    when(repository.existsByUsername(professor.getUsername())).thenReturn(true);
+    when(repository.existsByUsername(professorDto.getUsername())).thenReturn(true);
 
-    assertThrows(Exception.class, () -> service.create(professor));
+    assertThrows(Exception.class, () -> service.create(professorDto));
 
-    verify(repository, times(1)).existsByUsername(professor.getUsername());
+    verify(repository, times(1)).existsByUsername(professorDto.getUsername());
     verify(repository, never()).save(any(Professor.class));
   }
 
@@ -107,14 +110,16 @@ class ProfessorServiceTest {
   void testCreate() {
     Professor professor = getRandomProfessor();
     professor.setId(null);
+    ProfessorDto professorDto = service.convertToProfessorDto(professor);
 
-    when(repository.existsByUsername(professor.getUsername())).thenReturn(false);
+    when(repository.existsByUsername(professorDto.getUsername())).thenReturn(false);
     when(repository.save(any(Professor.class))).thenReturn(professor);
 
-    Professor createdProfessor = service.create(professor);
+    Professor createdProfessor = service.create(professorDto);
 
-    verify(repository, times(1)).existsByUsername(professor.getUsername());
-    verify(repository, times(1)).save(professor);
+
+    verify(repository, times(1)).existsByUsername(professorDto.getUsername());
+    verify(repository, times(1)).save(any(Professor.class));
     assertEquals(createdProfessor, professor);
   }
 
@@ -139,8 +144,9 @@ class ProfessorServiceTest {
   void update_throws_by_null_ID() {
     Professor professor = getRandomProfessor();
     professor.setId(null);
+    ProfessorDto professorDto = service.convertToProfessorDto(professor);
 
-    assertThrows(Exception.class, () -> service.update(professor));
+    assertThrows(Exception.class, () -> service.update(professorDto));
     verify(repository, never()).findById(professor.getId());
     verify(repository, never()).save(any(Professor.class));
   }
@@ -157,28 +163,28 @@ class ProfessorServiceTest {
     professor.setLastName("zoumpos");
     professor.setBirthday(LocalDate.of(1993, 4, 4));
 
-    Professor updateProfessor = new Professor();
-    updateProfessor.setId(1L);
+    ProfessorDto updateProfessorDto = new ProfessorDto();
+    updateProfessorDto.setId(1L);
     professor.setUsername("q");
-    updateProfessor.setEmail("x@k.com");
-    updateProfessor.setPhone("21034256978");
-    updateProfessor.setGender(Gender.MALE);
-    updateProfessor.setFirstName("xris");
-    updateProfessor.setLastName("kelaidis");
-    updateProfessor.setBirthday(LocalDate.of(2000, 1, 1));
+    updateProfessorDto.setEmail("x@k.com");
+    updateProfessorDto.setPhone("21034256978");
+    updateProfessorDto.setGender(Gender.MALE);
+    updateProfessorDto.setFirstName("xris");
+    updateProfessorDto.setLastName("kelaidis");
+    updateProfessorDto.setBirthday(LocalDate.of(2000, 1, 1));
 
-    when(repository.findById(updateProfessor.getId())).thenReturn(Optional.of(professor));
+    when(repository.findById(updateProfessorDto.getId())).thenReturn(Optional.of(professor));
     when(repository.save(professor)).thenReturn(professor);
 
-    Professor updatedProfessor = service.update(updateProfessor);
+    Professor updatedProfessor = service.update(updateProfessorDto);
 
     assertNotNull(updatedProfessor);
-    assertEquals("x@k.com", updateProfessor.getEmail());
-    assertEquals("21034256978", updateProfessor.getPhone());
-    assertEquals(Gender.MALE, updateProfessor.getGender());
-    assertEquals(LocalDate.of(2000, 1, 1), updateProfessor.getBirthday());
-    assertEquals("xris", updateProfessor.getFirstName());
-    assertEquals("kelaidis", updateProfessor.getLastName());
+    assertEquals("x@k.com", updateProfessorDto.getEmail());
+    assertEquals("21034256978", updateProfessorDto.getPhone());
+    assertEquals(Gender.MALE, updateProfessorDto.getGender());
+    assertEquals(LocalDate.of(2000, 1, 1), updateProfessorDto.getBirthday());
+    assertEquals("xris", updateProfessorDto.getFirstName());
+    assertEquals("kelaidis", updateProfessorDto.getLastName());
 
     verify(repository, times(1)).save(professor);
   }
