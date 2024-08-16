@@ -1,7 +1,7 @@
 package com.uni.university.service;
 
 import com.uni.university.domain.Professor;
-import com.uni.university.dto.ProfessorDto;
+import com.uni.university.dto.CreateUpdateProfessorDto;
 import com.uni.university.repository.ProfessorRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,9 +31,9 @@ public class ProfessorService {
   }
 
   @SneakyThrows
-  public Professor create(ProfessorDto professorDto) {
+  public Professor create(CreateUpdateProfessorDto professorDto) {
     //TODO replace with proper DTO
-    if (professorDto.getId() != null) {
+    if (professorDto.getIdForCreate() != null) {
       throw new Exception();
     }
     if (repository.existsByUsername(professorDto.getUsername())) {
@@ -46,11 +46,11 @@ public class ProfessorService {
   }
 
   @SneakyThrows
-  public Professor update(ProfessorDto professorDto) {
-    if (professorDto.getId() == null) {
+  public Professor update(CreateUpdateProfessorDto professorDto) {
+    if (professorDto.getIdForUpdate() == null) {
       throw new Exception();
     }
-    Professor existingProfessor = findOrThrow(professorDto.getId());
+    Professor existingProfessor = findOrThrow(professorDto.getIdForUpdate());
 
     if (professorDto.getFirstName() != null) {
       existingProfessor.setFirstName(professorDto.getFirstName());
@@ -96,16 +96,22 @@ public class ProfessorService {
     repository.deleteAllByIdInBatch(professorIds);
   }
 
-  public List<ProfessorDto> getAllInfo() {
+  public List<CreateUpdateProfessorDto> getAllInfo() {
     return repository.findAll()
         .stream()
         .map(this::convertToProfessorDto)
         .collect(Collectors.toList());
   }
 
-  public Professor convertToProfessor(ProfessorDto professorDto) {
+  public Professor convertToProfessor(CreateUpdateProfessorDto professorDto) {
     Professor professor = new Professor();
-    professor.setId(professorDto.getId());
+    if (professorDto.getIdForCreate() != null) {
+      professor.setId(professorDto.getIdForCreate());
+    } else if (professorDto.getIdForUpdate() != null) {
+      professor.setId(professorDto.getIdForUpdate());
+    } else {
+      professor.setId(null);
+    }
     professor.setFirstName(professorDto.getFirstName());
     professor.setLastName(professorDto.getLastName());
     professor.setEmail(professorDto.getEmail());
@@ -116,9 +122,11 @@ public class ProfessorService {
     return professor;
   }
 
-  public ProfessorDto convertToProfessorDto(Professor professor) {
-    ProfessorDto professorDto = new ProfessorDto();
-    professorDto.setId(professor.getId());
+  public CreateUpdateProfessorDto convertToProfessorDto(Professor professor) {
+    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    if (professor.getId() != null) {
+      professorDto.setIdForUpdate(professor.getId());
+    }
     professorDto.setFirstName(professor.getFirstName());
     professorDto.setLastName(professor.getLastName());
     professorDto.setUsername(professor.getUsername());

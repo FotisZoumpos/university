@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class PhoneValidator implements ConstraintValidator<ValidPhone, String> {
 
-  private static final String PATTERN = "^\\+?[0-9]+$";
+  private static final String PATTERN = "^\\+?[0-9]{10}$";
 
   @Override
   public void initialize(ValidPhone constraintAnnotation) {
