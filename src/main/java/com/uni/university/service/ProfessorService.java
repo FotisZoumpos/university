@@ -97,21 +97,22 @@ public class ProfessorService {
   }
 
   public List<CreateUpdateProfessorDto> getAllInfo() {
-    return repository.findAll()
-        .stream()
-        .map(this::convertToProfessorDto)
-        .collect(Collectors.toList());
+    return repository.findAll().stream().map(this::convertToProfessorDto).collect(Collectors.toList());
   }
 
+  @SneakyThrows
   public Professor convertToProfessor(CreateUpdateProfessorDto professorDto) {
     Professor professor = new Professor();
-    if (professorDto.getIdForCreate() != null) {
-      professor.setId(professorDto.getIdForCreate());
+    if (professorDto.getIdForCreate() != null && professorDto.getIdForUpdate() != null) {
+      throw new Exception();
     } else if (professorDto.getIdForUpdate() != null) {
       professor.setId(professorDto.getIdForUpdate());
-    } else {
+    } else if (professorDto.getIdForCreate() == null) {
       professor.setId(null);
+    } else {
+      throw new Exception();
     }
+
     professor.setFirstName(professorDto.getFirstName());
     professor.setLastName(professorDto.getLastName());
     professor.setEmail(professorDto.getEmail());
