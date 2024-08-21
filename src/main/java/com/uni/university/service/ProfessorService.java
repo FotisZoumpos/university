@@ -33,7 +33,7 @@ public class ProfessorService {
   @SneakyThrows
   public Professor create(CreateUpdateProfessorDto professorDto) {
     //TODO replace with proper DTO
-    if (professorDto.getIdForCreate() != null) {
+    if (professorDto.getId() != null) {
       throw new Exception();
     }
     if (repository.existsByUsername(professorDto.getUsername())) {
@@ -47,10 +47,10 @@ public class ProfessorService {
 
   @SneakyThrows
   public Professor update(CreateUpdateProfessorDto professorDto) {
-    if (professorDto.getIdForUpdate() == null) {
+    if (professorDto.getId() == null) {
       throw new Exception();
     }
-    Professor existingProfessor = findOrThrow(professorDto.getIdForUpdate());
+    Professor existingProfessor = findOrThrow(professorDto.getId());
 
     if (professorDto.getFirstName() != null) {
       existingProfessor.setFirstName(professorDto.getFirstName());
@@ -103,16 +103,7 @@ public class ProfessorService {
   @SneakyThrows
   public Professor convertToProfessor(CreateUpdateProfessorDto professorDto) {
     Professor professor = new Professor();
-    if (professorDto.getIdForCreate() != null && professorDto.getIdForUpdate() != null) {
-      throw new Exception();
-    } else if (professorDto.getIdForUpdate() != null) {
-      professor.setId(professorDto.getIdForUpdate());
-    } else if (professorDto.getIdForCreate() == null) {
-      professor.setId(null);
-    } else {
-      throw new Exception();
-    }
-
+    professor.setId(professorDto.getId());
     professor.setFirstName(professorDto.getFirstName());
     professor.setLastName(professorDto.getLastName());
     professor.setEmail(professorDto.getEmail());
@@ -125,9 +116,7 @@ public class ProfessorService {
 
   public CreateUpdateProfessorDto convertToProfessorDto(Professor professor) {
     CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
-    if (professor.getId() != null) {
-      professorDto.setIdForUpdate(professor.getId());
-    }
+    professorDto.setId(professorDto.getId());
     professorDto.setFirstName(professor.getFirstName());
     professorDto.setLastName(professor.getLastName());
     professorDto.setUsername(professor.getUsername());

@@ -18,13 +18,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
+
 public class CreateUpdateProfessorDto {
 
   @Null(groups = CreateGroup.class)
-  private Long idForCreate;
-
   @NotNull(groups = UpdateGroup.class)
-  private Long idForUpdate;
+  private Long id;
 
   @NotBlank(groups = {CreateGroup.class, UpdateGroup.class})
   @ValidName(groups = {CreateGroup.class, UpdateGroup.class})
@@ -38,6 +37,7 @@ public class CreateUpdateProfessorDto {
   @ValidUsername(groups = {CreateGroup.class, UpdateGroup.class})
   private String username;
 
+  @NotBlank(groups = {CreateGroup.class, UpdateGroup.class})
   @Email(groups = {CreateGroup.class, UpdateGroup.class})
   private String email;
 
@@ -49,6 +49,7 @@ public class CreateUpdateProfessorDto {
   private LocalDate birthday;
 
   @Null(groups = {CreateGroup.class})
+  @NotNull(groups = {UpdateGroup.class})
   private Gender gender;
 
 

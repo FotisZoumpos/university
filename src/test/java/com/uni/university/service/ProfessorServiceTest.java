@@ -85,7 +85,7 @@ class ProfessorServiceTest {
     professor.setId(1L);
     CreateUpdateProfessorDto professorDto = service.convertToProfessorDto(professor);
 
-    professorDto.setIdForCreate(professor.getId());
+    professorDto.setId(professor.getId());
 
     assertThrows(Exception.class, () -> service.create(professorDto));
 
@@ -166,7 +166,7 @@ class ProfessorServiceTest {
     professor.setBirthday(LocalDate.of(1993, 4, 4));
 
     CreateUpdateProfessorDto updateProfessorDto = new CreateUpdateProfessorDto();
-    updateProfessorDto.setIdForUpdate(1L);
+    updateProfessorDto.setId(1L);
     professor.setUsername("q");
     updateProfessorDto.setEmail("x@k.com");
     updateProfessorDto.setPhone("21034256978");
@@ -175,7 +175,7 @@ class ProfessorServiceTest {
     updateProfessorDto.setLastName("kelaidis");
     updateProfessorDto.setBirthday(LocalDate.of(2000, 1, 1));
 
-    when(repository.findById(updateProfessorDto.getIdForUpdate())).thenReturn(Optional.of(professor));
+    when(repository.findById(updateProfessorDto.getId())).thenReturn(Optional.of(professor));
     when(repository.save(professor)).thenReturn(professor);
 
     Professor updatedProfessor = service.update(updateProfessorDto);

@@ -4,12 +4,13 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.validation.Constraint;
 import javax.validation.Payload;
+import javax.validation.constraints.Pattern;
 
-@Constraint(validatedBy = NameValidator.class)
-@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@Pattern(regexp = "^[\\w\\-_.@]{2,30}$", message = "Username can be from 2-30 including special characters and NO whitespaces.")
 public @interface ValidUsername {
   String message() default "Invalid username";
 
