@@ -107,6 +107,30 @@ class ProfessorServiceTest {
     verify(repository, never()).save(any(Professor.class));
   }
 
+  @Test
+  void testCreate_throws_all_invalid_inputs_for_name() {
+    Professor professor = getRandomProfessor();
+
+    professor.setFirstName("f");
+    CreateUpdateProfessorDto professorDto = service.convertToProfessorDto(professor);
+    assertThrows(Exception.class, () -> service.create(professorDto));
+
+    professor.setFirstName("f".repeat(31));
+    CreateUpdateProfessorDto professorDto1 = service.convertToProfessorDto(professor);
+    assertThrows(Exception.class, () -> service.create(professorDto1));
+
+    professor.setFirstName("f z");
+    CreateUpdateProfessorDto professorDto2 = service.convertToProfessorDto(professor);
+    assertThrows(Exception.class, () -> service.create(professorDto2));
+
+    professor.setFirstName("f@z");
+    CreateUpdateProfessorDto professorDto3 = service.convertToProfessorDto(professor);
+    assertThrows(Exception.class, () -> service.create(professorDto3));
+
+    professor.setFirstName("f123");
+    CreateUpdateProfessorDto professorDto4 = service.convertToProfessorDto(professor);
+    assertThrows(Exception.class, () -> service.create(professorDto4));
+  }
 
   @Test
   void testCreate() {
@@ -167,7 +191,7 @@ class ProfessorServiceTest {
 
     CreateUpdateProfessorDto updateProfessorDto = new CreateUpdateProfessorDto();
     updateProfessorDto.setId(1L);
-    professor.setUsername("q");
+    updateProfessorDto.setUsername("p");
     updateProfessorDto.setEmail("x@k.com");
     updateProfessorDto.setPhone("21034256978");
     updateProfessorDto.setGender(Gender.MALE);
@@ -181,6 +205,7 @@ class ProfessorServiceTest {
     Professor updatedProfessor = service.update(updateProfessorDto);
 
     assertNotNull(updatedProfessor);
+    assertEquals("p", updateProfessorDto.getUsername());
     assertEquals("x@k.com", updateProfessorDto.getEmail());
     assertEquals("21034256978", updateProfessorDto.getPhone());
     assertEquals(Gender.MALE, updateProfessorDto.getGender());
