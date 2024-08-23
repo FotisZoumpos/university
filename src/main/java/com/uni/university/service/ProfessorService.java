@@ -1,5 +1,6 @@
 package com.uni.university.service;
 
+import com.uni.university.constraints.CreateGroup;
 import com.uni.university.domain.Professor;
 import com.uni.university.dto.CreateUpdateProfessorDto;
 import com.uni.university.repository.ProfessorRepository;
@@ -8,9 +9,11 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class ProfessorService {
 
   private final ProfessorRepository repository;
@@ -30,9 +33,12 @@ public class ProfessorService {
     return repository.save(professor);
   }
 
+
   @SneakyThrows
+  @Validated(CreateGroup.class)
   public Professor create(CreateUpdateProfessorDto professorDto) {
     //TODO replace with proper DTO
+
     if (professorDto.getId() != null) {
       throw new Exception();
     }
@@ -127,4 +133,6 @@ public class ProfessorService {
 
     return professorDto;
   }
+
+
 }
