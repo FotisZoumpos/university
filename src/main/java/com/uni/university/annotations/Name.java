@@ -7,12 +7,11 @@ import java.lang.annotation.Target;
 import javax.validation.Payload;
 import javax.validation.constraints.Pattern;
 
-
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Pattern(regexp = "^[\\w\\-_.@]{2,30}$", message = "Username can be from 2-30 including special characters and NO whitespaces.")
-public @interface ValidUsername {
-  String message() default "Invalid username";
+@Pattern(regexp = "^[A-Za-z]{2,30}$", message = "Name can contain from 2-30 letters and NO whitespaces.")
+public @interface Name {
+  String message() default "Invalid name";
 
   Class<?>[] groups() default {};
 

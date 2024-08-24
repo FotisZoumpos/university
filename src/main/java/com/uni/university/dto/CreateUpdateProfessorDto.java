@@ -24,7 +24,6 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class CreateUpdateProfessorDto {
 
   @Null(groups = CreateGroup.class)

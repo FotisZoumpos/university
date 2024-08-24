@@ -6,6 +6,7 @@ import com.uni.university.dto.CreateUpdateProfessorDto;
 import com.uni.university.repository.ProfessorRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,8 @@ public class ProfessorService {
 
   @SneakyThrows
   @Validated(CreateGroup.class)
-  public Professor create(CreateUpdateProfessorDto professorDto) {
-    //TODO replace with proper DTO
+  public Professor create(@Valid CreateUpdateProfessorDto professorDto) {
 
-    if (professorDto.getId() != null) {
-      throw new Exception();
-    }
     if (repository.existsByUsername(professorDto.getUsername())) {
       throw new Exception();
     }
