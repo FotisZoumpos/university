@@ -6,7 +6,6 @@ import com.uni.university.dto.CreateUpdateProfessorDto;
 import com.uni.university.repository.ProfessorRepository;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -97,10 +96,6 @@ public class ProfessorService {
   public void deleteAll(List<Long> professorIds) {
     /*Let's leave it like this for now and deal with the courses later */
     repository.deleteAllByIdInBatch(professorIds);
-  }
-
-  public List<CreateUpdateProfessorDto> getAllInfo() {
-    return repository.findAll().stream().map(this::convertToProfessorDto).collect(Collectors.toList());
   }
 
   @SneakyThrows
