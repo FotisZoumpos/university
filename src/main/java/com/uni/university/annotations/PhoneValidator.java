@@ -1,7 +1,7 @@
 package com.uni.university.annotations;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class PhoneValidator implements ConstraintValidator<Phone, String> {
 
