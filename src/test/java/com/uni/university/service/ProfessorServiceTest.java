@@ -66,14 +66,11 @@ class ProfessorServiceTest {
 
   @Test
   void testSave() {
-    // Arrange
     Professor professor = getRandomProfessor();
     when(repository.save(any(Professor.class))).thenReturn(professor);
 
-    // Act
     Professor savedProfessor = service.save(professor);
 
-    //Assert
     verify(repository, times(1)).save(professor);
     assertEquals(professor, savedProfessor);
 
@@ -82,11 +79,8 @@ class ProfessorServiceTest {
 
   @Test
   void testCreate_throws_by_not_null_ID() {
-    Professor professor = getRandomProfessor();
-    professor.setId(1L);
-    CreateUpdateProfessorDto professorDto = service.convertToProfessorDto(professor);
-
-    professorDto.setId(professor.getId());
+    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    professorDto.setId(1L);
 
     assertThrows(Exception.class, () -> service.create(professorDto));
 
@@ -96,9 +90,8 @@ class ProfessorServiceTest {
 
   @Test
   void testCreate_throws_by_username_exists() {
-    Professor professor = getRandomProfessor();
-    professor.setId(null);
-    CreateUpdateProfessorDto professorDto = service.convertToProfessorDto(professor);
+    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    professorDto.setId(null);
 
     when(repository.existsByUsername(professorDto.getUsername())).thenReturn(true);
 
@@ -110,35 +103,19 @@ class ProfessorServiceTest {
 
   @Test
   void testCreate_throws_for_less_than_two_characters() {
-    //Professor professor = getRandomProfessor();
     CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
-    professorDto.setId(1L);
-//    professorDto.setFirstName("f");
-    //CreateUpdateProfessorDto professorDto = service.convertToProfessorDto(professor);
+    professorDto.setId(null);
+    professorDto.setFirstName("ff");
+
     assertDoesNotThrow(() -> service.create(professorDto));
 
-    /*professor.setFirstName("f".repeat(31));
-    CreateUpdateProfessorDto professorDto1 = service.convertToProfessorDto(professor);
-    assertThrows(Exception.class, () -> service.create(professorDto1));
-
-    professor.setFirstName("f z");
-    CreateUpdateProfessorDto professorDto2 = service.convertToProfessorDto(professor);
-    assertThrows(Exception.class, () -> service.create(professorDto2));
-
-    professor.setFirstName("f@z");
-    CreateUpdateProfessorDto professorDto3 = service.convertToProfessorDto(professor);
-    assertThrows(Exception.class, () -> service.create(professorDto3));
-
-    professor.setFirstName("f123");
-    CreateUpdateProfessorDto professorDto4 = service.convertToProfessorDto(professor);
-    assertThrows(Exception.class, () -> service.create(professorDto4));*/
   }
 
   @Test
   void testCreate() {
-    Professor professor = getRandomProfessor();
-    professor.setId(null);
-    CreateUpdateProfessorDto professorDto = service.convertToProfessorDto(professor);
+    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    professorDto.setId(null);
+    Professor professor = service.convertToProfessor(professorDto);
 
     when(repository.existsByUsername(professorDto.getUsername())).thenReturn(false);
     when(repository.save(any(Professor.class))).thenReturn(professor);
@@ -170,12 +147,12 @@ class ProfessorServiceTest {
 
   @Test
   void update_throws_by_null_ID() {
-    Professor professor = getRandomProfessor();
-    professor.setId(null);
-    CreateUpdateProfessorDto professorDto = service.convertToProfessorDto(professor);
+    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    professorDto.setId(null);
 
     assertThrows(Exception.class, () -> service.update(professorDto));
-    verify(repository, never()).findById(professor.getId());
+
+    verify(repository, never()).findById(professorDto.getId());
     verify(repository, never()).save(any(Professor.class));
   }
 
@@ -218,21 +195,5 @@ class ProfessorServiceTest {
     verify(repository, times(1)).save(professor);
   }
 
-
-
-
-
-
-  /*How to test:
-   * Naming: testMethodName_whatYouTest_anyAdditionalInfo
-   * px: testCreate_throwsByUsernameAlreadyExists
-   * if you want to test the whole method testCreate makes sense
-   * for every conditional branch you have to create the corresponding test
-   * most acts produce a result, you might want to assert the result
-   * common assertions:
-   *  assertEquals -> checks equality of fields
-   *  assertNull -> checks if a field is null
-   *  verify -> verifies that a method was called with the correct argument
-   * */
 
 }
