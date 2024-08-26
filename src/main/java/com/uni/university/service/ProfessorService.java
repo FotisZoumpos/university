@@ -76,18 +76,6 @@ public class ProfessorService {
     return save(existingProfessor);
   }
 
-
-
-  /* public Professor update(Professor professor) {
-   * The logic for the update is this:
-   * If no id is provided -> means it is not an update
-   * If id is provided fetch the professor from database and update his!!! fields
-   * return the newly saved professor
-   * NOTE: Some fields should not be able to get updated
-   * which??
-   * how we should proceed with this?
-   * } */
-
   public void deleteById(Long id) {
     /*Let's leave it like this for now and deal with the courses later */
     repository.deleteById(id);
