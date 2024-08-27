@@ -1,10 +1,10 @@
 package com.uni.university.dto;
 
 
+import com.uni.university.domain.Gender;
 import com.uni.university.validation.Name;
 import com.uni.university.validation.Phone;
 import com.uni.university.validation.Username;
-import com.uni.university.domain.Gender;
 import com.uni.university.validation.groups.CreateGroup;
 import com.uni.university.validation.groups.UpdateGroup;
 import jakarta.validation.constraints.Email;
@@ -17,15 +17,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 
 @Getter
 @Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateUpdateProfessorDto {
 
   @Null(groups = CreateGroup.class)
@@ -55,8 +53,7 @@ public class CreateUpdateProfessorDto {
   @NotNull(groups = {CreateGroup.class, UpdateGroup.class})
   private LocalDate birthday;
 
-  @Null(groups = {CreateGroup.class})
-  @NotNull(groups = {UpdateGroup.class})
+  @NotNull(groups = {CreateGroup.class, UpdateGroup.class})
   private Gender gender;
 
 

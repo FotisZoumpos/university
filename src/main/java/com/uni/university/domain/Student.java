@@ -16,16 +16,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
+@Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(name = "student")
-@ToString
-@Builder
 public class Student {
 
   @Id
@@ -39,9 +37,11 @@ public class Student {
   @Column(name = "lastname", nullable = false)
   private String lastName;
 
+  // TODO same as professor
   @Column(name = "email", nullable = false, unique = true)
   private String email;
 
+  // TODO same as professor
   @Column(name = "phone", nullable = false, unique = true)
   private String phone;
 
@@ -56,13 +56,4 @@ public class Student {
       joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
   private List<Course> courses;
-
-  public Student(String firstName, String lastName, String email, String phone, LocalDate birthday, Gender gender) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.phone = phone;
-    this.birthday = birthday;
-    this.gender = gender;
-  }
 }

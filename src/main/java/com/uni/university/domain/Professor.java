@@ -3,7 +3,6 @@ package com.uni.university.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,17 +16,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 
+@Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "professor")
-@ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "professor")
 public class Professor {
 
   @Id
@@ -41,9 +38,11 @@ public class Professor {
   @Column(name = "lastname", nullable = false)
   private String lastName;
 
+  // TODO some users may not have an email or phone, this is a nullable field
   @Column(name = "email", nullable = false)
   private String email;
 
+  // TODO some users may not have an email or phone, this is a nullable field
   @Column(name = "phone", nullable = false)
   private String phone;
 
@@ -57,7 +56,7 @@ public class Professor {
   private String username;
 
   @Builder.Default
-  @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "professor")
   private Set<Course> courses = new HashSet<>();
 
 }

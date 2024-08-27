@@ -17,16 +17,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
+@Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "course")
-@ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "course")
 public class Course {
 
   @Id
@@ -49,11 +47,4 @@ public class Course {
   @ManyToOne
   @JoinColumn(name = "professor_id")
   private Professor professor;
-
-  public Course(String name, String description) {
-    this.name = name;
-    this.description = description;
-  }
-
-
 }
