@@ -1,6 +1,5 @@
 package com.uni.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static utils.ProfessorUtils.getRandomProfessor;
+import static utils.ProfessorUtils.getRandomProfessorDto;
 
 import com.uni.university.domain.Gender;
 import com.uni.university.domain.Professor;
@@ -79,7 +79,7 @@ class ProfessorServiceTest {
 
   @Test
   void testCreate_throws_by_not_null_ID() {
-    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
     professorDto.setId(1L);
 
     assertThrows(Exception.class, () -> service.create(professorDto));
@@ -90,7 +90,7 @@ class ProfessorServiceTest {
 
   @Test
   void testCreate_throws_by_username_exists() {
-    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
     professorDto.setId(null);
 
     when(repository.existsByUsername(professorDto.getUsername())).thenReturn(true);
@@ -102,18 +102,63 @@ class ProfessorServiceTest {
   }
 
   @Test
-  void testCreate_throws_for_less_than_two_characters() {
-    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+  void testCreate_throws_name_more_than_thirty_characters() {
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
     professorDto.setId(null);
-    professorDto.setFirstName("ff");
+    professorDto.setFirstName("f".repeat(31));
 
-    assertDoesNotThrow(() -> service.create(professorDto));
+    assertThrows(Exception.class, () -> service.create(professorDto));
+  }
+
+  @Test
+  void testCreate_throws_name_with_special_characters() {
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
+    professorDto.setId(null);
+    professorDto.setFirstName("f@");
+
+    assertThrows(Exception.class, () -> service.create(professorDto));
+  }
+
+  @Test
+  void testCreate_throws_name_with_whitespaces() {
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
+    professorDto.setId(null);
+    professorDto.setFirstName("f z");
+
+    assertThrows(Exception.class, () -> service.create(professorDto));
+  }
+
+  @Test
+  void testCreate_throws_name_with_empty_string() {
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
+    professorDto.setId(null);
+    professorDto.setFirstName("");
+
+    assertThrows(Exception.class, () -> service.create(professorDto));
+  }
+
+  @Test
+  void testCreate_throws_name_with_numbers() {
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
+    professorDto.setId(null);
+    professorDto.setFirstName("1");
+
+    assertThrows(Exception.class, () -> service.create(professorDto));
+  }
+
+  @Test
+  void testCreate_throws_name_less_than_two_characters() {
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
+    professorDto.setId(null);
+    professorDto.setFirstName("f");
+
+    assertThrows(Exception.class, () -> service.create(professorDto));
 
   }
 
   @Test
   void testCreate() {
-    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
     professorDto.setId(null);
     Professor professor = service.convertToProfessor(professorDto);
 
@@ -147,12 +192,40 @@ class ProfessorServiceTest {
 
   @Test
   void update_throws_by_null_ID() {
-    CreateUpdateProfessorDto professorDto = new CreateUpdateProfessorDto();
+    CreateUpdateProfessorDto professorDto = getRandomProfessorDto();
     professorDto.setId(null);
 
     assertThrows(Exception.class, () -> service.update(professorDto));
 
     verify(repository, never()).findById(professorDto.getId());
+    verify(repository, never()).save(any(Professor.class));
+  }
+
+ 
+  @Test
+  void testUpdate_throws_while_user_input_adds_same_values_as_existing() {
+    Professor professor = getRandomProfessor();
+    professor.setId(1L);
+    professor.setFirstName("fotis");
+    professor.setLastName("zoumpos");
+    professor.setEmail("f@z.gr");
+    professor.setPhone("6980972601");
+    professor.setGender(Gender.OTHER);
+    professor.setBirthday(LocalDate.of(1993, 4, 4));
+
+    CreateUpdateProfessorDto createUpdateProfessorDto = getRandomProfessorDto();
+    createUpdateProfessorDto.setId(1L);
+    createUpdateProfessorDto.setFirstName("fotis");
+    createUpdateProfessorDto.setLastName("zoumpos");
+    createUpdateProfessorDto.setEmail("f@z.gr");
+    createUpdateProfessorDto.setPhone("6980972601");
+    createUpdateProfessorDto.setGender(Gender.OTHER);
+    createUpdateProfessorDto.setBirthday(LocalDate.of(1993, 4, 4));
+
+    when(repository.findById(1L)).thenReturn(Optional.of(professor));
+
+    assertThrows(Exception.class, () -> service.update(createUpdateProfessorDto));
+
     verify(repository, never()).save(any(Professor.class));
   }
 
@@ -168,7 +241,7 @@ class ProfessorServiceTest {
     professor.setLastName("zoumpos");
     professor.setBirthday(LocalDate.of(1993, 4, 4));
 
-    CreateUpdateProfessorDto updateProfessorDto = new CreateUpdateProfessorDto();
+    CreateUpdateProfessorDto updateProfessorDto = getRandomProfessorDto();
     updateProfessorDto.setId(1L);
     updateProfessorDto.setUsername("p");
     updateProfessorDto.setEmail("x@k.com");
@@ -184,13 +257,13 @@ class ProfessorServiceTest {
     Professor updatedProfessor = service.update(updateProfessorDto);
 
     assertNotNull(updatedProfessor);
-    assertEquals("p", updateProfessorDto.getUsername());
-    assertEquals("x@k.com", updateProfessorDto.getEmail());
-    assertEquals("21034256978", updateProfessorDto.getPhone());
-    assertEquals(Gender.MALE, updateProfessorDto.getGender());
-    assertEquals(LocalDate.of(2000, 1, 1), updateProfessorDto.getBirthday());
-    assertEquals("xris", updateProfessorDto.getFirstName());
-    assertEquals("kelaidis", updateProfessorDto.getLastName());
+    assertEquals("p", updatedProfessor.getUsername());
+    assertEquals("x@k.com", updatedProfessor.getEmail());
+    assertEquals("21034256978", updatedProfessor.getPhone());
+    assertEquals(Gender.MALE, updatedProfessor.getGender());
+    assertEquals(LocalDate.of(2000, 1, 1), updatedProfessor.getBirthday());
+    assertEquals("xris", updatedProfessor.getFirstName());
+    assertEquals("kelaidis", updatedProfessor.getLastName());
 
     verify(repository, times(1)).save(professor);
   }

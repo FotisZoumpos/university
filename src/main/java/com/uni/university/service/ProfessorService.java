@@ -49,28 +49,42 @@ public class ProfessorService {
 
   @SneakyThrows
   public Professor update(CreateUpdateProfessorDto professorDto) {
-    if (professorDto.getId() == null) {
+   
+    Professor existingProfessor = findOrThrow(professorDto.getId());
+    if (professorDto.getFirstName() != null && !professorDto.getFirstName().equals(existingProfessor.getFirstName())) {
+      existingProfessor.setFirstName(professorDto.getFirstName());
+    } else {
       throw new Exception();
     }
-    Professor existingProfessor = findOrThrow(professorDto.getId());
-
-    if (professorDto.getFirstName() != null) {
-      existingProfessor.setFirstName(professorDto.getFirstName());
-    }
-    if (professorDto.getLastName() != null) {
+    if (professorDto.getLastName() != null && !professorDto.getLastName().equals(existingProfessor.getLastName())) {
       existingProfessor.setLastName(professorDto.getLastName());
+    } else {
+      throw new Exception();
     }
-    if (professorDto.getEmail() != null) {
+    if (professorDto.getUsername() != null && !professorDto.getUsername().equals(existingProfessor.getUsername())) {
+      existingProfessor.setUsername(professorDto.getUsername());
+    } else {
+      throw new Exception();
+    }
+    if (professorDto.getEmail() != null && !professorDto.getEmail().equals(existingProfessor.getEmail())) {
       existingProfessor.setEmail(professorDto.getEmail());
+    } else {
+      throw new Exception();
     }
-    if (professorDto.getPhone() != null) {
+    if (professorDto.getPhone() != null && !professorDto.getPhone().equals(existingProfessor.getPhone())) {
       existingProfessor.setPhone(professorDto.getPhone());
+    } else {
+      throw new Exception();
     }
-    if (professorDto.getGender() != null) {
+    if (professorDto.getGender() != null && !professorDto.getGender().equals(existingProfessor.getGender())) {
       existingProfessor.setGender(professorDto.getGender());
+    } else {
+      throw new Exception();
     }
-    if (professorDto.getBirthday() != null) {
+    if (professorDto.getBirthday() != null && !professorDto.getBirthday().equals(existingProfessor.getBirthday())) {
       existingProfessor.setBirthday(professorDto.getBirthday());
+    } else {
+      throw new Exception();
     }
 
     return save(existingProfessor);
