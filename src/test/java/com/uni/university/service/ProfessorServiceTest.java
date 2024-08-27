@@ -1,5 +1,6 @@
 package com.uni.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,22 +36,25 @@ class ProfessorServiceTest {
 
   @Test
   void testFindAll() {
-    service.findAll();
-    verify(repository, times(1)).findAll();
+    assertDoesNotThrow(() -> service.findAll());
+    // TODO wrap every service test call with assertDoesNotThrow for appropriate scenarios
 
+    verify(repository, times(1)).findAll();
   }
 
   @Test
   void testFindOrThrow() {
-    Professor professor = getRandomProfessor();
+    var professor = getRandomProfessor();
+
     when(repository.findById(professor.getId())).thenReturn(Optional.of(professor));
 
-    Professor foundProfessor = service.findOrThrow(professor.getId());
+    var result = assertDoesNotThrow(() -> service.findOrThrow(professor.getId()));
 
     verify(repository, times(1)).findById(professor.getId());
-    assertEquals(foundProfessor, professor);
-
+    assertEquals(professor, result); //TODO CHECK this one. assertEquals takes (expected, actual)
   }
+
+  //TODO apply similar changes to every method in this class
 
   @Test
   void testFindOrThrow_throws() {
@@ -201,7 +205,7 @@ class ProfessorServiceTest {
     verify(repository, never()).save(any(Professor.class));
   }
 
- 
+
   @Test
   void testUpdate_throws_while_user_input_adds_same_values_as_existing() {
     Professor professor = getRandomProfessor();
