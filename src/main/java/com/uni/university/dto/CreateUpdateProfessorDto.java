@@ -1,12 +1,12 @@
 package com.uni.university.dto;
 
 
-import com.uni.university.annotations.Name;
-import com.uni.university.annotations.Phone;
-import com.uni.university.annotations.Username;
-import com.uni.university.constraints.CreateGroup;
-import com.uni.university.constraints.UpdateGroup;
+import com.uni.university.validation.Name;
+import com.uni.university.validation.Phone;
+import com.uni.university.validation.Username;
 import com.uni.university.domain.Gender;
+import com.uni.university.validation.groups.CreateGroup;
+import com.uni.university.validation.groups.UpdateGroup;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

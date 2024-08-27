@@ -1,4 +1,4 @@
-package com.uni.university.annotations;
+package com.uni.university.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -14,6 +14,8 @@ public class PhoneValidator implements ConstraintValidator<Phone, String> {
 
   @Override
   public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
+    /*TODO there is a better way to implement it using com.google.i18n.phonenumbers.PhoneNumberUtil
+    *  This is optionally and up to you to improve it*/
     if (s == null) {
       return true;
     }
