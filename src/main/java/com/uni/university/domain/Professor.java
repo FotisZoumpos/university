@@ -38,12 +38,15 @@ public class Professor {
   @Column(name = "lastname", nullable = false)
   private String lastName;
 
+  @Column(name = "username", nullable = false, unique = true)
+  private String username;
+
   // TODO some users may not have an email or phone, this is a nullable field
-  @Column(name = "email", nullable = false)
+  @Column(name = "email")
   private String email;
 
   // TODO some users may not have an email or phone, this is a nullable field
-  @Column(name = "phone", nullable = false)
+  @Column(name = "phone")
   private String phone;
 
   @Column(name = "birthday", nullable = false)
@@ -51,9 +54,6 @@ public class Professor {
 
   @Column(name = "gender", nullable = false)
   private Gender gender;
-
-  @Column(name = "username", nullable = false, unique = true)
-  private String username;
 
   @Builder.Default
   @OneToMany(mappedBy = "professor")

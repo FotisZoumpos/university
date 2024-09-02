@@ -38,11 +38,11 @@ public class Student {
   private String lastName;
 
   // TODO same as professor
-  @Column(name = "email", nullable = false, unique = true)
+  @Column(name = "email")
   private String email;
 
   // TODO same as professor
-  @Column(name = "phone", nullable = false, unique = true)
+  @Column(name = "phone")
   private String phone;
 
   @Column(name = "birthday", nullable = false)
