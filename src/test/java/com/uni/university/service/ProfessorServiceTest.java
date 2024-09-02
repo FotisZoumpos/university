@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,7 +36,9 @@ class ProfessorServiceTest {
   @InjectMocks
   private ProfessorService service;
 
-  private final ProfessorMapper mapper = ProfessorMapper.INSTANCE;
+  private final ProfessorMapper mapper = Mappers.getMapper(ProfessorMapper.class);
+
+  // TODO now professor service doesn't get all the necessary dependencies, inject mocks -> gets only the repository and not the mapper, find a way to solve this
 
   @Test
   void testFindAll() {
