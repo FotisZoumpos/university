@@ -15,7 +15,7 @@ public class ProfessorService {
 
   private final ProfessorRepository repository;
 
-  private final ProfessorMapper professorMapper = ProfessorMapper.INSTANCE;
+  private final ProfessorMapper professorMapper;
   //TODO All Exceptions should be replaced with customised university exceptions
 
   public List<Professor> findAll() {

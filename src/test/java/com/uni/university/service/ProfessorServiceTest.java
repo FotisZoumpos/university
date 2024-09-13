@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,10 +32,11 @@ class ProfessorServiceTest {
   @Mock
   private ProfessorRepository repository;
 
+  @Mock
+  private ProfessorMapper professorMapper;
+
   @InjectMocks
   private ProfessorService service;
-
-  private final ProfessorMapper mapper = Mappers.getMapper(ProfessorMapper.class);
 
   // TODO now professor service doesn't get all the necessary dependencies, inject mocks -> gets only the repository and not the mapper, find a way to solve this
 
@@ -183,7 +183,9 @@ class ProfessorServiceTest {
   void testCreate() {
     var professorDto = getRandomProfessorDto();
     professorDto.setId(null);
-    var professor = service.convertToProfessor(professorDto);
+    var professor = getRandomProfessor();
+
+    when(professorMapper.professorDtoToProfessor(professorDto)).thenReturn(professor);
 
     when(repository.existsByUsername(professorDto.getUsername())).thenReturn(false);
     when(repository.save(any(Professor.class))).thenReturn(professor);
@@ -193,6 +195,7 @@ class ProfessorServiceTest {
 
     verify(repository, times(1)).existsByUsername(professorDto.getUsername());
     verify(repository, times(1)).save(any(Professor.class));
+    verify(professorMapper, times(1)).professorDtoToProfessor(professorDto);
     assertEquals(createdProfessor, professor);
   }
 
@@ -304,7 +307,7 @@ class ProfessorServiceTest {
     professorDto.setBirthday(LocalDate.of(1993, 4, 4));
     professorDto.setGender(Gender.OTHER);
 
-    Professor professor = mapper.professorDtoToProfessor(professorDto);
+    Professor professor = professorMapper.professorDtoToProfessor(professorDto);
 
     assertEquals(professorDto.getId(), professor.getId());
     assertEquals(professorDto.getFirstName(), professor.getFirstName());
@@ -317,5 +320,31 @@ class ProfessorServiceTest {
     assertNull(professor.getCourses());
 
   }
+/*
+  @Test
+  void professorDto_to_professor_with_null_values() {
+    var professorDto = getRandomProfessorDto();
+    professorDto.setId(null);
+    professorDto.setFirstName(null);
+    professorDto.setLastName(null);
+    professorDto.setUsername(null);
+    professorDto.setEmail(null);
+    professorDto.setPhone(null);
+    professorDto.setBirthday(null);
+    professorDto.setGender(null);
+
+    Professor professor = professorMapper.professorDtoToProfessor(professorDto);
+
+    assertNull(professor.getId());
+    assertNull(professor.getFirstName());
+    assertNull(professor.getLastName());
+    assertNull(professor.getUsername());
+    assertNull(professor.getEmail());
+    assertNull(professor.getPhone());
+    assertNull(professor.getBirthday());
+    assertNull(professor.getGender());
+
+
+  }*/
 
 }
