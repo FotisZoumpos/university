@@ -15,6 +15,7 @@ import static utils.ProfessorUtils.getRandomProfessorDto;
 
 import com.uni.university.domain.Gender;
 import com.uni.university.domain.Professor;
+import com.uni.university.dto.CreateUpdateProfessorDto;
 import com.uni.university.mappers.ProfessorMapper;
 import com.uni.university.repository.ProfessorRepository;
 import java.time.LocalDate;
@@ -115,11 +116,18 @@ class ProfessorServiceTest {
   void testCreate_throws_by_username_exists() {
     var professorDto = getRandomProfessorDto();
     professorDto.setId(null);
+    professorDto.setUsername("fotis");
 
+    var professor = getRandomProfessor();
+    professor.setId(null);
+    professor.setUsername("fotis");
+
+    when(professorMapper.professorDtoToProfessor(professorDto)).thenReturn(professor);
     when(repository.existsByUsername(professorDto.getUsername())).thenReturn(true);
 
     assertThrows(Exception.class, () -> service.create(professorDto));
 
+    verify(professorMapper, times(1)).professorDtoToProfessor(professorDto);
     verify(repository, times(1)).existsByUsername(professorDto.getUsername());
     verify(repository, never()).save(any(Professor.class));
   }
@@ -183,17 +191,21 @@ class ProfessorServiceTest {
   void testCreate() {
     var professorDto = getRandomProfessorDto();
     professorDto.setId(null);
+    professorDto.setUsername("fotis");
+
     var professor = getRandomProfessor();
+    professor.setId(null);
+    professor.setUsername("fotis");
 
     when(professorMapper.professorDtoToProfessor(professorDto)).thenReturn(professor);
 
-    when(repository.existsByUsername(professorDto.getUsername())).thenReturn(false);
+    when(repository.existsByUsername("fotis")).thenReturn(false);
     when(repository.save(any(Professor.class))).thenReturn(professor);
 
     Professor createdProfessor = assertDoesNotThrow(() -> service.create(professorDto));
 
 
-    verify(repository, times(1)).existsByUsername(professorDto.getUsername());
+    verify(repository, times(1)).existsByUsername("fotis");
     verify(repository, times(1)).save(any(Professor.class));
     verify(professorMapper, times(1)).professorDtoToProfessor(professorDto);
     assertEquals(createdProfessor, professor);
@@ -224,7 +236,7 @@ class ProfessorServiceTest {
 
     assertThrows(Exception.class, () -> service.update(professorDto));
 
-    verify(repository, never()).findById(professorDto.getId());
+    verify(repository, times(1)).findById(professorDto.getId());
     verify(repository, never()).save(any(Professor.class));
   }
 
@@ -235,6 +247,7 @@ class ProfessorServiceTest {
     professor.setId(1L);
     professor.setFirstName("fotis");
     professor.setLastName("zoumpos");
+    professor.setUsername("paralias");
     professor.setEmail("f@z.gr");
     professor.setPhone("6980972601");
     professor.setGender(Gender.OTHER);
@@ -244,6 +257,7 @@ class ProfessorServiceTest {
     createUpdateProfessorDto.setId(1L);
     createUpdateProfessorDto.setFirstName("fotis");
     createUpdateProfessorDto.setLastName("zoumpos");
+    createUpdateProfessorDto.setUsername("paralias");
     createUpdateProfessorDto.setEmail("f@z.gr");
     createUpdateProfessorDto.setPhone("6980972601");
     createUpdateProfessorDto.setGender(Gender.OTHER);
@@ -278,7 +292,7 @@ class ProfessorServiceTest {
     updateProfessorDto.setLastName("kelaidis");
     updateProfessorDto.setBirthday(LocalDate.of(2000, 1, 1));
 
-    when(repository.findById(updateProfessorDto.getId())).thenReturn(Optional.of(professor));
+    when(repository.findById(1L)).thenReturn(Optional.of(professor));
     when(repository.save(professor)).thenReturn(professor);
 
     var updatedProfessor = assertDoesNotThrow(() -> service.update(updateProfessorDto));
@@ -307,8 +321,20 @@ class ProfessorServiceTest {
     professorDto.setBirthday(LocalDate.of(1993, 4, 4));
     professorDto.setGender(Gender.OTHER);
 
-    Professor professor = professorMapper.professorDtoToProfessor(professorDto);
+    var professor = getRandomProfessor();
+    professor.setId(professorDto.getId());
+    professor.setFirstName(professorDto.getFirstName());
+    professor.setLastName(professorDto.getLastName());
+    professor.setUsername(professorDto.getUsername());
+    professor.setEmail(professorDto.getEmail());
+    professor.setPhone(professorDto.getPhone());
+    professor.setBirthday(professorDto.getBirthday());
+    professor.setGender(professorDto.getGender());
 
+    when(professorMapper.professorDtoToProfessor(any(CreateUpdateProfessorDto.class))).thenReturn(professor);
+    Professor result = professorMapper.professorDtoToProfessor(professorDto);
+
+    assertNotNull(result);
     assertEquals(professorDto.getId(), professor.getId());
     assertEquals(professorDto.getFirstName(), professor.getFirstName());
     assertEquals(professorDto.getLastName(), professor.getLastName());
@@ -317,10 +343,8 @@ class ProfessorServiceTest {
     assertEquals(professorDto.getPhone(), professor.getPhone());
     assertEquals(professorDto.getBirthday(), professor.getBirthday());
     assertEquals(professorDto.getGender(), professor.getGender());
-    assertNull(professor.getCourses());
-
   }
-/*
+
   @Test
   void professorDto_to_professor_with_null_values() {
     var professorDto = getRandomProfessorDto();
@@ -333,8 +357,20 @@ class ProfessorServiceTest {
     professorDto.setBirthday(null);
     professorDto.setGender(null);
 
-    Professor professor = professorMapper.professorDtoToProfessor(professorDto);
+    var professor = getRandomProfessor();
+    professor.setId(professorDto.getId());
+    professor.setFirstName(professorDto.getFirstName());
+    professor.setLastName(professorDto.getLastName());
+    professor.setUsername(professorDto.getUsername());
+    professor.setEmail(professorDto.getEmail());
+    professor.setPhone(professorDto.getPhone());
+    professor.setBirthday(professorDto.getBirthday());
+    professor.setGender(professorDto.getGender());
 
+    when(professorMapper.professorDtoToProfessor(any(CreateUpdateProfessorDto.class))).thenReturn(null);
+    Professor result = professorMapper.professorDtoToProfessor(professorDto);
+
+    assertNull(result);
     assertNull(professor.getId());
     assertNull(professor.getFirstName());
     assertNull(professor.getLastName());
@@ -345,6 +381,6 @@ class ProfessorServiceTest {
     assertNull(professor.getGender());
 
 
-  }*/
+  }
 
 }

@@ -46,15 +46,24 @@ public class ProfessorService {
 
   @SneakyThrows
   public Professor create(CreateUpdateProfessorDto professorDto) {
-
-    return repository.save(convertToProfessor(professorDto));
+    return save(convertToProfessor(professorDto));
   }
 
   @SneakyThrows
   public Professor update(CreateUpdateProfessorDto professorDto) {
     var professor = findOrThrow(professorDto.getId());
+    if (professor.getFirstName().equals(professorDto.getFirstName()) &&
+        professor.getLastName().equals(professorDto.getLastName()) &&
+        professor.getUsername().equals(professorDto.getUsername()) &&
+        professor.getEmail().equals(professorDto.getEmail()) &&
+        professor.getPhone().equals(professorDto.getPhone()) &&
+        professor.getGender() == professorDto.getGender() &&
+        professor.getBirthday().equals(professorDto.getBirthday())) {
+      throw new Exception();
+    }
     professor.setFirstName(professorDto.getFirstName());
     professor.setLastName(professorDto.getLastName());
+    professor.setUsername(professorDto.getUsername());
     professor.setEmail(professorDto.getEmail());
     professor.setPhone(professorDto.getPhone());
     professor.setGender(professorDto.getGender());
