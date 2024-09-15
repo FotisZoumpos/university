@@ -11,7 +11,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,10 +39,12 @@ public class Course {
   private String description;
 
   @ManyToMany
-  @JoinTable(name = "course_student",
+  @JoinTable(
+      name = "course_students",
       joinColumns = @JoinColumn(name = "course_id"),
-      inverseJoinColumns = @JoinColumn(name = "student_id"))
-  private List<Student> students;
+      inverseJoinColumns = @JoinColumn(name = "student_id")
+  )
+  private Set<Student> students;
 
   @ManyToOne
   @JoinColumn(name = "professor_id")

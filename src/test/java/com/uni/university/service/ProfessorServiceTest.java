@@ -34,7 +34,8 @@ class ProfessorServiceTest {
   private ProfessorRepository repository;
 
   @Mock
-  private ProfessorMapper professorMapper;
+  private ProfessorMapper professorMapper; // TODO this is wrong, we want the actual mapper, not a mock to perform as the mapper
+  // TODO revert the change and find another way to provide this dependency
 
   @InjectMocks
   private ProfessorService service;
