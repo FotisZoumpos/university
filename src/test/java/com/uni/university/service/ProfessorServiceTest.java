@@ -123,12 +123,12 @@ class ProfessorServiceTest {
     professor.setId(null);
     professor.setUsername("fotis");
 
-    when(professorMapper.professorDtoToProfessor(professorDto)).thenReturn(professor);
+    when(professorMapper.fromDtoToProfessor(professorDto)).thenReturn(professor);
     when(repository.existsByUsername(professorDto.getUsername())).thenReturn(true);
 
     assertThrows(Exception.class, () -> service.create(professorDto));
 
-    verify(professorMapper, times(1)).professorDtoToProfessor(professorDto);
+    verify(professorMapper, times(1)).fromDtoToProfessor(professorDto);
     verify(repository, times(1)).existsByUsername(professorDto.getUsername());
     verify(repository, never()).save(any(Professor.class));
   }
@@ -198,7 +198,7 @@ class ProfessorServiceTest {
     professor.setId(null);
     professor.setUsername("fotis");
 
-    when(professorMapper.professorDtoToProfessor(professorDto)).thenReturn(professor);
+    when(professorMapper.fromDtoToProfessor(professorDto)).thenReturn(professor);
 
     when(repository.existsByUsername("fotis")).thenReturn(false);
     when(repository.save(any(Professor.class))).thenReturn(professor);
@@ -208,7 +208,7 @@ class ProfessorServiceTest {
 
     verify(repository, times(1)).existsByUsername("fotis");
     verify(repository, times(1)).save(any(Professor.class));
-    verify(professorMapper, times(1)).professorDtoToProfessor(professorDto);
+    verify(professorMapper, times(1)).fromDtoToProfessor(professorDto);
     assertEquals(createdProfessor, professor);
   }
 
@@ -332,8 +332,8 @@ class ProfessorServiceTest {
     professor.setBirthday(professorDto.getBirthday());
     professor.setGender(professorDto.getGender());
 
-    when(professorMapper.professorDtoToProfessor(any(CreateUpdateProfessorDto.class))).thenReturn(professor);
-    Professor result = professorMapper.professorDtoToProfessor(professorDto);
+    when(professorMapper.fromDtoToProfessor(any(CreateUpdateProfessorDto.class))).thenReturn(professor);
+    Professor result = professorMapper.fromDtoToProfessor(professorDto);
 
     assertNotNull(result);
     assertEquals(professorDto.getId(), professor.getId());
@@ -368,8 +368,8 @@ class ProfessorServiceTest {
     professor.setBirthday(professorDto.getBirthday());
     professor.setGender(professorDto.getGender());
 
-    when(professorMapper.professorDtoToProfessor(any(CreateUpdateProfessorDto.class))).thenReturn(null);
-    Professor result = professorMapper.professorDtoToProfessor(professorDto);
+    when(professorMapper.fromDtoToProfessor(any(CreateUpdateProfessorDto.class))).thenReturn(null);
+    Professor result = professorMapper.fromDtoToProfessor(professorDto);
 
     assertNull(result);
     assertNull(professor.getId());

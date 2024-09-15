@@ -8,5 +8,5 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProfessorMapper {
-  Professor professorDtoToProfessor(CreateUpdateProfessorDto dto);
+  Professor fromDtoToProfessor(CreateUpdateProfessorDto dto);
 }

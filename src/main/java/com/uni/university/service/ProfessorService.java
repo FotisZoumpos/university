@@ -44,32 +44,14 @@ public class ProfessorService {
     return repository.save(professor);
   }
 
-  @SneakyThrows
+  // TODO maybe we could unify them into one upsert method, to check after controller
   public Professor create(CreateUpdateProfessorDto professorDto) {
-    return save(convertToProfessor(professorDto));
+    return save(professorMapper.fromDtoToProfessor(professorDto));
   }
 
-  @SneakyThrows
   public Professor update(CreateUpdateProfessorDto professorDto) {
-    var professor = findOrThrow(professorDto.getId());
-    if (professor.getFirstName().equals(professorDto.getFirstName()) &&
-        professor.getLastName().equals(professorDto.getLastName()) &&
-        professor.getUsername().equals(professorDto.getUsername()) &&
-        professor.getEmail().equals(professorDto.getEmail()) &&
-        professor.getPhone().equals(professorDto.getPhone()) &&
-        professor.getGender() == professorDto.getGender() &&
-        professor.getBirthday().equals(professorDto.getBirthday())) {
-      throw new Exception();
-    }
-    professor.setFirstName(professorDto.getFirstName());
-    professor.setLastName(professorDto.getLastName());
-    professor.setUsername(professorDto.getUsername());
-    professor.setEmail(professorDto.getEmail());
-    professor.setPhone(professorDto.getPhone());
-    professor.setGender(professorDto.getGender());
-    professor.setBirthday(professorDto.getBirthday());
-
-    return save(professor);
+    // TODO check for id mismatch in controller
+    return save(professorMapper.fromDtoToProfessor(professorDto));
   }
 
   public void deleteById(Long id) {
@@ -80,11 +62,5 @@ public class ProfessorService {
   public void deleteAll(List<Long> professorIds) {
     /*Let's leave it like this for now and deal with the courses later */
     repository.deleteAllByIdInBatch(professorIds);
-  }
-
-  @SneakyThrows
-  public Professor convertToProfessor(CreateUpdateProfessorDto professorDto) {
-    // TODO Add Mapstruct for this
-    return professorMapper.professorDtoToProfessor(professorDto);
   }
 }
